@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import axios from "axios"
 import {
   Dialog,
   DialogContent,
@@ -12,14 +13,55 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 
+
 const Topbar = () => {
 
   const [name,setName] = useState("");
-  const [file,setFile] = useState(null);
+  const [file,setFile] = useState<File | null>(null);
 
-  const handleSubmit = () => {
-    console.log("submit");
+  const handleSubmit = async () => {
+    try {
+
+
+      const data = {
+        "name" : name
+      }
+
+      const formData = new FormData();
+      if (file) {
+        formData.append('file', file);
+      }
+
+      //upload file to backend
+      const upload = await axios.post('/api/document/upload',formData,{
+        headers : {
+          "Content-Type" : "multipart/form-data"
+        }
+      })
+
+      console.log(upload.data);
+      
+
+      
+      const doc = await axios.post(`/api/document`,data);
+      
+      console.log(doc.data);
+
+      const fileName = file?.name;
+
+      const embedding = {
+        "_id" : doc.data._id,
+        "fileName" : fileName
+      }
+      const createEmbeddings = await axios.post('/api/document/process',embedding);
+
+      console.log(createEmbeddings.data);
+      
+      
     
+    } catch (error:any) {
+      console.log(error.message, { status: 400 });
+    }
   }
 
   return (
@@ -58,7 +100,7 @@ const Topbar = () => {
             />
             </div>
             <div className="mt-4 flex flex-row justify-center">
-              <Button onClick={handleSubmit}>
+              <Button variant="outline" onClick={handleSubmit}>
                 Submit
               </Button>
             </div>
