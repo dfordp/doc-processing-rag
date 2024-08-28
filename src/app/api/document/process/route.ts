@@ -13,6 +13,8 @@ export async function POST(request: Request){
         
 
         const embeddings = await createEmbeddings(_id,file);
+        console.log(embeddings);
+        
 
         console.log("post called");
 

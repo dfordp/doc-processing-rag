@@ -12,6 +12,8 @@ export async function POST(req: Request) {
       const buffer = new Uint8Array(arrayBuffer);
       const filePath = path.join(process.cwd(), 'public', file.name);
       await fs.writeFile(filePath, buffer);
+
+      
       revalidatePath("/");
   
       return NextResponse.json({ status: "success" });

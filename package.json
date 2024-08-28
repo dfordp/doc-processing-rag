@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@huggingface/transformers": "^3.0.0-alpha.12",
+    "@langchain/openai": "^0.2.8",
     "@prisma/client": "^5.18.0",
     "@qdrant/js-client-rest": "^1.11.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -19,7 +20,7 @@
     "axios": "^1.7.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "groq-sdk": "^0.6.0",
+    "groq-sdk": "^0.6.1",
     "langchain": "^0.2.17",
     "lucide-react": "^0.436.0",
     "mammoth": "^1.8.0",

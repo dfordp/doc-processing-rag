@@ -1,5 +1,8 @@
 import { QdrantClient } from "@qdrant/js-client-rest";
-import { AutoModel } from "@huggingface/transformers";
+// import { AutoModel } from "@huggingface/transformers";
+//@ts-ignore
+import { OpenAIEmbeddings } from "@langchain/openai"
+
 import fs from "node:fs/promises";
 
 const client = new QdrantClient({
@@ -7,25 +10,32 @@ const client = new QdrantClient({
     apiKey: process.env.NEXT_PUBLIC_QDRANT_API_KEY
 });
 
+const model = new OpenAIEmbeddings({
+    openAIApiKey: process.env.NEXT_PUBLIC_OPEN_AI_KEY,
+    modelName: "text-embedding-ada-002", // or "text-embedding-3-large"
+});
+
+async function getEmbedding(text: string): Promise<number[]> {
+    return model.embedQuery(text);
+  }
+
 export const createEmbeddings = async (_id , file) => {
    try {
     
-    const model = await AutoModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2");
 
     const content = await fs.readFile(file, 'utf8');
     const lines = content.split('\n');
     const encodedLines = [];
     for (let i = 0; i < lines.length; i++) {
-        const encoded = await model([lines[i]]);
+        const encoded = await getEmbedding(lines[i]);
         encodedLines.push({
             id: `${i+1}`,
             documentId: _id,
             vector: encoded[0],
-            payload: lines[i]
+            payload: { text: lines[i] } 
         });
-        await client.upsert("my_collection", { points: encoded });
     }
-
+    await client.upsert("my_collection", { points: encodedLines });
     console.log(`Documents uploaded successfully to collection 'my_collection'`);
 
     return {
