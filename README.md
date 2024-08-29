@@ -19,7 +19,7 @@ These components work together to provide a seamless experience for users to int
  
   - /api/document : handles creation of document instance to the database
   - /api/document/upload : handles the upload of file from form component to the public folder allowing it to be accessed by server action functions
-  - /api/document/process = handles conversion of document into embeddings and adding to the the vectorDB chromaDB
+  - /api/document/process : handles conversion of document into embeddings and adding to the the vectorDB chromaDB
   - /api/chat : handles all the chat functionalities of the application based on document  including quering vectorDB, creating bot response , and optimizing the same for the future queries
 
 - Note that the application can only handle .pdf files as of now as each different file type requries a specifc conversion process we couldn't be done in the short span of time given
