@@ -1,12 +1,16 @@
+import { getDocuments } from "@/actions/document";
 import Chat from "../components/Chat";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
-export default function Chart() {
+export default async function Chart() {
+
+    const documents = await getDocuments();
+
     return (
         <main className="flex flex-row">
           <div>
-            <Sidebar/>
+            <Sidebar docs={documents}/>
           </div>
           <div>
             <div>

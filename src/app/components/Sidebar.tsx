@@ -3,16 +3,12 @@
 import { useRouter } from "next/navigation"
 import { IoIosDocument } from "react-icons/io"
 
-const Sidebar = () => {
-
-  const docs = [
-    { id: 1, name: "Document 1" },
-    { id: 2, name: "Document 2" }
-  ];
+const Sidebar = (docs) => {
 
   const router = useRouter();
 
-
+  console.log(docs);
+  
 
   return (
     <div className="bg-gray-200 h-screen px-6 py-4">
@@ -20,7 +16,7 @@ const Sidebar = () => {
         Momentum
       </h3>     
       <div className="mt-6 flex flex-col items-center">
-      {docs.map((doc, index) => (
+      {docs.docs.map((doc, index) => (
         <div onClick={()=>{router.push(`/${doc.id}`)}} key={index} className="flex flex-row items-center scroll-m-20 text-xl font-semibold tracking-tight mt-2 gap-2">
           <div>
             <IoIosDocument />
