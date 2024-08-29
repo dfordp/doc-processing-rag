@@ -13,9 +13,9 @@ These components work together to provide a seamless experience for users to int
 
 - Utlized Next.js for achieving non-functional requirements
 
-- Utlized OpenAI embeddings along with the document upload to handle file conversions
-
-- API routes
+- Utlized OpenAI embeddings along with the document upload to handle file conversions and ChromaDB (container is run locally using docker as given below).
+ 
+- API routes: 
  
   - /api/document : handles creation of document instance to the database
   - /api/document/upload : handles the upload of file from form component to the public folder allowing it to be accessed by server action functions
