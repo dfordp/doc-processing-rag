@@ -4,8 +4,11 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
 export default async function Chart() {
+  
 
     const documents = await getDocuments();
+
+
 
     return (
         <main className="flex flex-row">

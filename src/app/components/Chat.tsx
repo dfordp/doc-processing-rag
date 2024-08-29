@@ -1,7 +1,11 @@
 "use client"
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { getChatsById } from '@/actions/chats';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import axios from 'axios';
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react';
 
 enum Role {
   USER = 'USER',
@@ -15,26 +19,41 @@ interface Message {
 }
 
 const Chat = () => {
-  const router = useRouter();
-  const { pathname } = router;
+  const pathname = usePathname()
+  const _id = pathname.substring(1)
+  
+  const [messages,setMessages] = useState([]);
+  const [newMessage,setNewMessage] = useState([]);
 
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, role: Role.BOT, content: "Hello! How can I assist you today?" },
-    { id: 2, role: Role.USER, content: "I need help with my order." }
-  ]);
+  useEffect(()=>{
+
+    const getMessages = async(id) => {
+      const messages = await getChatsById(id);
+      setMessages(messages);
+    }
+    getMessages(_id)
+  },[]);
+
+  
+
   const [input, setInput] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
-      const newMessage: Message = {
-        id: messages.length + 1,
-        role: Role.USER,
-        content: input
-      };
-      setMessages([...messages, newMessage]);
-      setInput('');
+    
+    const data = {
+      "content" : newMessage,
+      "document_id" : _id,
+      "createdBy" : "USER"
     }
+
+    const BotResponse = await axios.post('/api/chat' , data);
+
+    console.log(BotResponse.data);
+
+    setMessages(...messages, BotResponse.data);
+    
+    
   };
 
   return (
@@ -47,15 +66,11 @@ const Chat = () => {
               </div>
             ))}
           </div>
-          <form onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              placeholder="Type your message here..."
+            <Input
+              value={newMessage} 
+              onChange={(e) => setNewMessage(e.target.value)} 
             />
-            <button type="submit">Send</button>
-          </form>
+            <Button variant="outline" onClick={handleSubmit}>Send</Button>
         </div>
     </div>
   );

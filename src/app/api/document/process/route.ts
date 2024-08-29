@@ -1,7 +1,8 @@
-import { createEmbeddings } from "@/helpers/pinecone";
+import { createEmbeddings } from "@/helpers/chromadb";
 import { NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import path from 'path';
+import { PdfReader } from "pdfreader";
 
 export async function POST(request: Request) {
     try {
@@ -9,9 +10,21 @@ export async function POST(request: Request) {
         const { _id, fileName } = body;
         const file = path.join(process.cwd(), 'public', fileName);
 
+        const documents = []
+
+        new PdfReader().parseFileItems(file, (err, item) => {
+            if (err) console.error("error:", err);
+            else if (!item) return;
+            else if (item.text) documents.push(item.text);
+          });
+    
+
+   
+
+
         console.log("pre called");
 
-        const embeddings = await createEmbeddings(_id, file);
+        const embeddings = await createEmbeddings(documents, _id);
         
         if (!embeddings || !Array.isArray(embeddings)) {
             throw new Error("Failed to generate embeddings");
@@ -21,7 +34,7 @@ export async function POST(request: Request) {
         await fs.unlink(file);
 
 
-        return NextResponse.json({ status: "success", embeddings });
+        return NextResponse.json({ status: "success" });
 
     } catch (error) {
         console.error("Error:", error);
