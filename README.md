@@ -5,7 +5,7 @@
 The system consists of two main components:
 
 1. Document Processing Service.
-2. RAG Chatbot Service
+2. RAG Chatbot Service.
 
 These components work together to provide a seamless experience for users to interact with their document-based knowledge.
 
